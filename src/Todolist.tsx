@@ -1,14 +1,14 @@
 import React from "react";
 
 type TaskType = {
-    id: number;
+    id: string;
     title: string;
     isDone: boolean;
 }
 type PropType = {
     title: string;
     tasks: Array<TaskType>;
-    removeTask: (taskId: number) => void;
+    removeTask: (taskId: string) => void;
     changeFilter: (value: "all" | "active" | "completed") => void;
 }
 
