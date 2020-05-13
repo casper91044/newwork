@@ -3,8 +3,9 @@ import './App.css';
 import {Todolist} from "./Todolist";
 import {v1} from "uuid";
 
+
 function App() {
-    let [task,setTask] = useState ([
+    let [tasks,setTask] = useState ([
         {id:v1(),title:"HTML&CSS ",isDone:true},
         {id:v1(),title:"JS ",isDone:true},
         {id:v1(),title:"ReactJS ",isDone:false},
@@ -12,18 +13,24 @@ function App() {
         {id:v1(),title:"GraphQL ",isDone:false}
     ]);
 
+    function addTask(title:string) {
+        let task = {id:v1(),title: title,isDone:false};
+        let newTasks = [task, ...tasks];
+        setTask(newTasks);
+    }
+
     function removeTask(id:string) {
-        let filterTask = task.filter(t=> t.id !=id);
+        let filterTask = tasks.filter(t=> t.id !=id);
         setTask(filterTask);
     }
 
     let [filter,setFilter] = useState <"all" | "active" | "completed">("all");
-    let taskForTodolist = task;
+    let taskForTodolist = tasks;
     if (filter === "active") {
-        taskForTodolist = task.filter(t => t.isDone === false);
+        taskForTodolist = tasks.filter(t => t.isDone === false);
     }
     if (filter === "completed") {
-        taskForTodolist = task.filter(t => t.isDone === true);
+        taskForTodolist = tasks.filter(t => t.isDone === true);
     }
     function changeFilter(value: "all" | "active" | "completed") {
         setFilter(value);
@@ -33,9 +40,12 @@ function App() {
           <Todolist title="What to Learn?"
                     tasks={taskForTodolist}
                     removeTask={removeTask}
-                    changeFilter={changeFilter}/>
+                    changeFilter={changeFilter}
+                    addTask={addTask}/>
         </div>
     );
 }
+
+
 
 export default App;
