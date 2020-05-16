@@ -1,4 +1,5 @@
 import React, {useState} from "react";
+import {FilterValuesType} from "./App";
 
 type TaskType = {
     id: string;
@@ -9,7 +10,7 @@ type PropType = {
     title: string;
     tasks: Array<TaskType>;
     removeTask: (taskId: string) => void;
-    changeFilter: (value: "all" | "active" | "completed") => void;
+    changeFilter: (value: FilterValuesType) => void;
     addTask: (title:string) => void;
 }
 
@@ -18,7 +19,7 @@ export const Todolist = (props: PropType) => {
 
     function addTask(title:string) {
         props.addTask(title);
-        setTitle("")
+        setTitle("");
     }
     return (
         <div>
@@ -26,17 +27,22 @@ export const Todolist = (props: PropType) => {
             <div>
                 <input
                     value={title}
-                    onChange={(e) => {setTitle(e.currentTarget.value)}}
+                    onChange={ (event) => {setTitle(event.currentTarget.value) } }
+                    onKeyPress={ (event) => {if (event.charCode === 13) {addTask(title)} } }
                 />
                 <button onClick={() => addTask(title)}>+</button>
             </div>
             <ul>
                 {
-                    props.tasks.map(t => <li key={t.id}>
-                        <input type="checkbox" checked={t.isDone}/>
-                        <span>{t.title}</span>
-                        <button onClick={ () => {props.removeTask(t.id)}}>x</button>
-                    </li>)
+                    props.tasks.map(t => {
+                        return (
+                            <li key={t.id}>
+                                <input type="checkbox" checked={t.isDone}/>
+                                <span>{t.title}</span>
+                                <button onClick={ () => {props.removeTask(t.id)}}>x</button>
+                            </li>
+                        )
+                    })
                 }
             </ul>
             <div>
