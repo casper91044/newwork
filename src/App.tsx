@@ -7,7 +7,7 @@ import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography}
 import {Menu} from "@material-ui/icons";
 
 export type FilterValuesType = "all" | "active" | "completed";
-type TodoListsType = {
+export type TodoListsType = {
     id: string,
     title: string,
     filter: FilterValuesType
@@ -61,18 +61,18 @@ function App() {
         }
     }
 
-    function changeFilter(value: FilterValuesType, todoListId: string) {
-        let todolist = todoLists.find(tl => tl.id === todoListId);
+    function changeFilter(value: FilterValuesType, id: string) {
+        let todolist = todoLists.find(tl => tl.id === id);
         if (todolist) {
             todolist.filter = value;
             setTodoLists([...todoLists]);
         }
     }
 
-    let removeTodoList = (todoListId: string) => {
-        let filteredTodoList = todoLists.filter(tl => tl.id !== todoListId)
+    let removeTodoList = (id: string) => {
+        let filteredTodoList = todoLists.filter(tl => tl.id !== id)
         setTodoLists(filteredTodoList);
-        delete tasksObj[todoListId];
+        delete tasksObj[id];
         setTask({...tasksObj});
     }
 
@@ -120,7 +120,7 @@ function App() {
                         <Menu/>
                     </IconButton>
                     <Typography variant='h6'>
-                        News
+
                     </Typography>
                     <Button color='inherit'>Login</Button>
                 </Toolbar>
