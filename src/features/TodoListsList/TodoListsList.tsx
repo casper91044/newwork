@@ -1,27 +1,22 @@
-import React, {useCallback, useEffect} from 'react';
-import './App.css';
-import {Todolist} from "./Todolist";
-import {AddItemForm} from "./AddItemForm";
-import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
-import {Menu} from "@material-ui/icons";
+import React, {useCallback, useEffect} from "react";
+import {useDispatch, useSelector} from "react-redux";
+import {AppRootStateType} from "../../app/store";
 import {
     addTodoListTC,
-    changeTodoListFilterAC, changeTodoListTitleTC, fetchTodolistsTC, FilterValuesType,
-    removeTodoListTC, TodolistDomainType,
-} from "./state/todolists-reducer";
-import {
-    addTaskTC,
-    removeTaskTC, updateTaskTC
-} from "./state/tasks-reducer";
-import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./state/store";
-import {TaskStatuses, TaskType} from "./api/todolist-api";
+    changeTodoListFilterAC,
+    changeTodoListTitleTC,
+    fetchTodolistsTC,
+    FilterValuesType,
+    removeTodoListTC,
+    TodolistDomainType
+} from "./todolists-reducer";
+import {addTaskTC, removeTaskTC, TasksStateType, updateTaskTC} from "./tasks-reducer";
+import {TaskStatuses} from "../../api/todolist-api";
+import {Grid, Paper} from "@material-ui/core";
+import {AddItemForm} from "../../components/AddItemForm/AddItemForm";
+import {Todolist} from "./TodoList/Todolist";
 
-export type TasksStateType = {
-    [key: string]: Array<TaskType>
-}
-
-function AppWithRedux() {
+export const TodoListsList: React.FC = (props) => {
 
     const todoLists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists);
     const task = useSelector<AppRootStateType, TasksStateType>(state => state.tasks);
@@ -75,28 +70,19 @@ function AppWithRedux() {
         dispatch(thunk);
     }, [dispatch]);
 
-    return (
-        <div className="App">
-            <AppBar position='static'>
-                <Toolbar>
-                    <IconButton>
-                        <Menu/>
-                    </IconButton>
-                    <Typography variant='h6'>
 
-                    </Typography>
-                    <Button color='inherit'>Login</Button>
-                </Toolbar>
-            </AppBar>
-            <Container fixed>
-                <Grid container style={{padding: "20px"}}>
-                    <AddItemForm addItem={addTodoList}/>
-                </Grid>
-                <Grid container spacing={10}>
-                    {
-                        todoLists.map((tl) => {
-                            let allTodolistTasks = task[tl.id];
-                            return <Grid item key={tl.id}>
+    return (
+
+        <>
+            <Grid container style={{padding: "20px"}}>
+                <AddItemForm addItem={addTodoList}/>
+            </Grid>
+            <Grid container spacing={10}>
+                {
+                    todoLists.map(tl => {
+                        let allTodolistTasks = task[tl.id];
+                        return (
+                            <Grid item key={tl.id}>
                                 <Paper style={{padding: "10px"}}>
                                     <Todolist title={tl.title}
                                               key={tl.id}
@@ -112,13 +98,11 @@ function AppWithRedux() {
                                               changeTodoListTitle={changeTodoListTitle}
                                     />
                                 </Paper>
-                            </Grid>
-                        })}
-                </Grid>
-            </Container>
-        </div>
-    );
+                            </Grid>)
+                    })
+                }
+            </Grid>
+
+        </>)
+
 }
-
-
-export default AppWithRedux;
