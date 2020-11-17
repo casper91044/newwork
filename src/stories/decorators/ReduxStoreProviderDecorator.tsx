@@ -1,21 +1,24 @@
 import React from 'react'
 import {Provider} from 'react-redux'
-import {combineReducers, createStore} from 'redux'
+import {applyMiddleware, combineReducers, createStore} from 'redux'
 import {v1} from 'uuid'
 import {tasksReducer} from "../../features/TodoListsList/tasks-reducer";
 import {AppRootStateType} from "../../app/store";
 import {todolistsReducer} from "../../features/TodoListsList/todolists-reducer";
 import {TaskPriorities, TaskStatuses} from "../../api/todolist-api";
+import {appReducer} from "../../app/app-reducer";
+import thunk from "redux-thunk";
 
 const rootReducer = combineReducers({
     tasks: tasksReducer,
-    todolists: todolistsReducer
+    todolists: todolistsReducer,
+    app: appReducer
 })
 
-const initialGlobalState = {
+const initialGlobalState: AppRootStateType = {
     todolists: [
-        {id: "todolistId1", title: "What to learn", filter: "all", addedDate: '', order: 0},
-        {id: "todolistId2", title: "What to buy", filter: "all", addedDate: '', order: 0}
+        {id: "todolistId1", title: "What to learn", filter: "all", entityStatus: 'idle', addedDate: '', order: 0},
+        {id: "todolistId2", title: "What to buy", filter: "all", entityStatus: 'idle', addedDate: '', order: 0}
     ] ,
     tasks: {
         ["todolistId1"]: [
@@ -30,10 +33,14 @@ const initialGlobalState = {
             {id: v1(), title: "React Book", status: TaskStatuses.New, todoListId: "todoListId2", description: '',
                 startDate: '', deadline: '', addedDate: '', order: 0, priority: TaskPriorities.Low}
         ]
+    },
+    app: {
+        status: 'idle',
+        error: null
     }
 };
 
-export const storyBookStore = createStore(rootReducer, initialGlobalState as AppRootStateType);
+export const storyBookStore = createStore(rootReducer, initialGlobalState, applyMiddleware(thunk));
 
 export const ReduxStoreProviderDecorator = (storyFn: any) => (
     <Provider

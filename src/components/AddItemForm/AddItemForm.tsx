@@ -4,9 +4,10 @@ import {ControlPoint} from "@material-ui/icons";
 
 type AddItemFormPropsType = {
     addItem: (title: string) => void;
+    disabled?: boolean
 }
 
-export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
+export const AddItemForm = React.memo(({addItem, disabled = false}: AddItemFormPropsType) => {
     let [title, setTitle] = useState("");
     let [error, setError] = useState<string | null>(null);
     const onChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +23,7 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
     }
     const addTask = () => {
         if (title.trim() !== "") {
-            props.addItem(title.trim());
+            addItem(title.trim());
             setTitle("");
         } else {
             setError("Title is required");
@@ -31,7 +32,8 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
     }
     return <div>
         <TextField
-            variant={"outlined"}
+            variant="outlined"
+            disabled={disabled}
             label={'Type value'}
             value={title}
             onChange={onChangeHandler}
@@ -39,7 +41,7 @@ export const AddItemForm = React.memo((props: AddItemFormPropsType) => {
             error={!!error}
             helperText={error}
         />
-        <IconButton onClick={addTask}  color={"primary"}>
+        <IconButton onClick={addTask} disabled={disabled} color={"primary"}>
             <ControlPoint/>
         </IconButton>
     </div>
